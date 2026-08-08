@@ -4,15 +4,16 @@ A modular backtesting engine in Python that ingests historical OHLCV data and ex
 
 ## Status
 
-In progress.
+Core engine working end-to-end (see `examples/run_backtest.py`).
 
 ## Roadmap
 
-- [ ] Historical OHLCV data ingestion
-- [ ] Strategy execution loop (position, cash, equity tracking)
-- [ ] Performance analytics: PnL, Sharpe ratio, max drawdown, win rate
-- [ ] Lookahead-bias and survivorship-bias safeguards
-- [ ] Pluggable external signal interface
+- [x] Historical OHLCV data ingestion (`src/data.py`)
+- [x] Strategy execution loop (position, cash, equity tracking) (`src/engine.py`, `src/portfolio.py`)
+- [x] Performance analytics: PnL, Sharpe ratio, max drawdown (`src/metrics.py`) — win rate not yet added
+- [x] Lookahead-bias safeguard: engine only ever exposes bars up to the current one to the signal generator, and fills orders at next-bar open, not the bar the signal was computed on
+- [ ] Survivorship-bias safeguard: not solvable in the engine — needs a point-in-time universe from the data vendor; flagged as a known limitation in `src/data.py` for now
+- [x] Pluggable external signal interface (`src/signals.py::SignalGenerator`, example plug-in in `src/strategies/moving_average_cross.py`)
 
 ## Tech Stack
 
