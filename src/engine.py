@@ -12,6 +12,7 @@ class BacktestEngine:
         data: pd.DataFrame,
         signal_generator: SignalGenerator,
         initial_cash: float = 100_000.0,
+        cost_bps: float = 0.0,
     ):
         required_cols = {"open", "close"}
         if not required_cols.issubset(data.columns):
@@ -19,7 +20,7 @@ class BacktestEngine:
 
         self.data = data.reset_index(drop=True)
         self.signal_generator = signal_generator
-        self.portfolio = Portfolio(initial_cash=initial_cash)
+        self.portfolio = Portfolio(initial_cash=initial_cash, cost_bps=cost_bps)
 
     def run(self) -> pd.DataFrame:
         n = len(self.data)

@@ -8,6 +8,7 @@ from .signals import Signal
 @dataclass
 class Portfolio:
     initial_cash: float
+    cost_bps: float = 0.0
     cash: float = field(init=False)
     position: float = field(init=False, default=0.0)
     equity_curve: list[float] = field(init=False, default_factory=list)
@@ -28,6 +29,9 @@ class Portfolio:
 
         delta_shares = target_position - self.position
         self.cash -= delta_shares * price
+        # commission + slippage, charged on every trade's dollar notional -
+        # zero by default so every pre-existing call site is unaffected
+        self.cash -= abs(delta_shares) * price * (self.cost_bps / 10_000)
         self.position = target_position
 
     def mark_to_market(self, price: float) -> float:
